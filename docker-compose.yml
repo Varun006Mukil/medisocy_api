@@ -1,0 +1,21 @@
+version: "3.8"
+
+
+services:
+
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_dev
+    ports:
+      - "8080:8000"
+    volumes:
+      - .:/app  # This mounts your local code inside the container
+      - /home/medisocy.com/public_html/images:/app/images
+    env_file:
+      - .env  
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  
+    command: ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "start:app", "--bind", "0.0.0.0:8000"]
